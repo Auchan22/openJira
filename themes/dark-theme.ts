@@ -16,4 +16,16 @@ export const darkTheme = createTheme({
       main: '#a4161a',
     },
   },
+  components: {
+    MuiAppBar: {
+      defaultProps: {
+        elevation: 0,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: '#3a015c',
+        },
+      },
+    },
+  },
 });
