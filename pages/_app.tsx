@@ -6,7 +6,7 @@ import { UIProvider } from '../context/ui';
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <UIProvider>
-      <ThemeProvider theme={lightTheme}>
+      <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <Component {...pageProps} />
       </ThemeProvider>
