@@ -17,8 +17,6 @@ export const entriesReducer = (
         entries: [...state.entries, action.payload],
       };
 
-      break;
-
     default:
       return state;
   }
