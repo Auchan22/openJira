@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Grid } from '@mui/material';
+import { Card, CardContent, CardHeader, Grid, Divider } from '@mui/material';
 import type { NextPage } from 'next';
 import { Layout } from '../components/layouts';
 
@@ -12,6 +12,7 @@ const Home: NextPage = () => {
               title='Pendientes'
               sx={{ textAlign: 'center', fontWeight: 'bold' }}
             />
+            <Divider />
             <CardContent></CardContent>
           </Card>
         </Grid>
@@ -21,6 +22,7 @@ const Home: NextPage = () => {
               title='En progreso'
               sx={{ textAlign: 'center', fontWeight: 'bold' }}
             />
+            <Divider />
           </Card>
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -29,6 +31,7 @@ const Home: NextPage = () => {
               title='Finalizadas'
               sx={{ textAlign: 'center', fontWeight: 'bold' }}
             />
+            <Divider />
           </Card>
         </Grid>
       </Grid>
