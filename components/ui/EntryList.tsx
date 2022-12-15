@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const EntryList: FC<Props> = ({ status }) => {
-  const { entries } = useContext(EntriesContext);
+  const { entries, updateEntry } = useContext(EntriesContext);
   const { isDragging, endDragging } = useContext(UIContext);
   const entriesFiltred = useMemo(
     () => entries.filter((entry) => entry.status === status),
@@ -26,7 +26,10 @@ export const EntryList: FC<Props> = ({ status }) => {
 
   const onDrop = (e: DragEvent<HTMLDivElement>) => {
     const id = e.dataTransfer.getData('text');
-    console.log(id);
+    const entry = entries.find((e) => e._id === id)!;
+    entry.status = status;
+    updateEntry(entry);
+    endDragging();
   };
 
   return (
