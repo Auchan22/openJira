@@ -3,9 +3,12 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AddIcon from '@mui/icons-material/Add';
 import { Box } from '@mui/system';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
+import { EntriesContext } from '../../context/entries';
 
 export const NewEntry = () => {
+  const { addNewEntry } = useContext(EntriesContext);
+
   const [isAdding, setIsAdding] = useState<boolean>(false);
 
   const [inputValue, setInputValue] = useState<string>('');
@@ -17,6 +20,10 @@ export const NewEntry = () => {
 
   const onSave = () => {
     if (inputValue.length === 0) return;
+    addNewEntry(inputValue);
+    setIsAdding(false);
+    setInputValue('');
+    setTouch(false);
   };
 
   return (
@@ -40,6 +47,7 @@ export const NewEntry = () => {
             <Button
               variant='outlined'
               color='secondary'
+              onClick={() => onSave()}
               endIcon={<SaveAltIcon />}
             >
               Guardar
