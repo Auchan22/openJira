@@ -28,16 +28,26 @@ export const EntriesProvider: FC<Props> = ({ children }) => {
     //   status: 'pending',
     // };
 
-    const { data } = await entriesAPI.post<Entry>('/entries', { description });
     try {
+      const { data } = await entriesAPI.post<Entry>('/entries', {
+        description,
+      });
       dispatch({ type: 'Entries - Add Entry', payload: data });
     } catch (error) {
       console.error(error);
     }
   };
 
-  const updateEntry = (entry: Entry) => {
-    dispatch({ type: 'Entries - Update Entry', payload: entry });
+  const updateEntry = async ({ _id, description, status }: Entry) => {
+    try {
+      const { data } = await entriesAPI.put<Entry>(`/entries/${_id}`, {
+        description,
+        status,
+      });
+      dispatch({ type: 'Entries - Update Entry', payload: data });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const refreshEntries = async () => {
