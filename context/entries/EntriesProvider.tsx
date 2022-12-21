@@ -3,7 +3,6 @@ import { EntriesContext, entriesReducer } from './';
 
 import { Entry } from '../../interfaces';
 
-import { v4 as uuidv4 } from 'uuid';
 import { entriesAPI } from '../../apis';
 
 export interface EntriesState {
@@ -21,14 +20,20 @@ interface Props {
 export const EntriesProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(entriesReducer, Entries_INITIAL_STATE);
 
-  const addNewEntry = (description: string) => {
-    const newEntry: Entry = {
-      _id: uuidv4(),
-      description,
-      createdAt: Date.now(),
-      status: 'pending',
-    };
-    dispatch({ type: 'Entries - Add Entry', payload: newEntry });
+  const addNewEntry = async (description: string) => {
+    // const newEntry: Entry = {
+    //   _id: uuidv4(),
+    //   description,
+    //   createdAt: Date.now(),
+    //   status: 'pending',
+    // };
+
+    const { data } = await entriesAPI.post<Entry>('/entries', { description });
+    try {
+      dispatch({ type: 'Entries - Add Entry', payload: data });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const updateEntry = (entry: Entry) => {
