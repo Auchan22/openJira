@@ -23,6 +23,9 @@ export default function handler(
     case 'PUT':
       return updateEntry(req, res);
 
+    case 'GET':
+      return getEntry(req, res);
+
     default:
       return res.status(400).json({ message: 'Invalid ID: ' + id });
   }
@@ -58,6 +61,31 @@ const updateEntry = async (req: NextApiRequest, res: NextApiResponse) => {
   } catch (error: any) {
     console.error(error);
     await db.disconnect();
+    res.status(400).json({ message: error.errors.status });
+  }
+};
+
+const getEntry = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { id } = req.query;
+
+  await db.connect();
+
+  try {
+    const existEntry = await Entry.findById(id);
+
+    if (!existEntry) {
+      return res
+        .status(400)
+        .json({ message: 'No se encontro la entry con ese id' });
+    }
+    res.status(200).json(existEntry);
+
+    await db.disconnect();
+  } catch (error: any) {
+    console.error(error);
+
+    await db.disconnect();
+
     res.status(400).json({ message: error.errors.status });
   }
 };
