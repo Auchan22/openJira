@@ -30,7 +30,9 @@ export default function handler(
 
 const updateEntry = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
+
   await db.connect();
+
   const entryUpdate = await Entry.findById(id);
   if (!entryUpdate) {
     return res
@@ -41,14 +43,21 @@ const updateEntry = async (req: NextApiRequest, res: NextApiResponse) => {
   const { description = entryUpdate.description, status = entryUpdate.status } =
     req.body;
 
-  const updatedEntry = await Entry.findByIdAndUpdate(
-    id,
-    {
-      description,
-      status,
-    },
-    { runValidators: true, new: true },
-  );
+  try {
+    const updatedEntry = await Entry.findByIdAndUpdate(
+      id,
+      {
+        description,
+        status,
+      },
+      { runValidators: true, new: true },
+    );
 
-  res.status(200).json(updatedEntry);
+    res.status(200).json(updatedEntry);
+    await db.disconnect();
+  } catch (error: any) {
+    console.error(error);
+    await db.disconnect();
+    res.status(400).json({ message: error.errors.status });
+  }
 };
