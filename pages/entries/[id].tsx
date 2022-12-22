@@ -1,4 +1,5 @@
-import { useState, ChangeEvent, useMemo } from 'react';
+import { useState, ChangeEvent, useMemo, FC } from 'react';
+import { GetServerSideProps } from 'next';
 
 import {
   Button,
@@ -20,11 +21,17 @@ import {
 import { Layout } from '../../components/layouts';
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { EntryStatus } from '../../interfaces';
+import { Entry, EntryStatus } from '../../interfaces';
+import mongoose from 'mongoose';
 
 const validStatus: EntryStatus[] = ['pending', 'in-progress', 'finished'];
 
-const EntryPage = () => {
+interface Props {
+  props: string;
+}
+
+const EntryPage: FC<Props> = (props) => {
+  console.log(props);
   const [inputValue, setInputValue] = useState<string>('');
   const [status, setStatus] = useState<EntryStatus>('pending');
   const [touched, setTouched] = useState<boolean>(false);
@@ -107,6 +114,24 @@ const EntryPage = () => {
       </IconButton>
     </Layout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const { id } = params as { id: string };
+  if (!mongoose.isValidObjectId(id)) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      id,
+    },
+  };
 };
 
 export default EntryPage;
