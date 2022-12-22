@@ -70,22 +70,14 @@ const getEntry = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await db.connect();
 
-  try {
-    const existEntry = await Entry.findById(id);
+  const existEntry = await Entry.findById(id);
 
-    if (!existEntry) {
-      return res
-        .status(400)
-        .json({ message: 'No se encontro la entry con ese id' });
-    }
-    res.status(200).json(existEntry);
-
-    await db.disconnect();
-  } catch (error: any) {
-    console.error(error);
-
-    await db.disconnect();
-
-    res.status(400).json({ message: error.errors.status });
+  if (!existEntry) {
+    return res
+      .status(400)
+      .json({ message: 'No se encontro la entry con ese id' });
   }
+  res.status(200).json(existEntry);
+
+  await db.disconnect();
 };
