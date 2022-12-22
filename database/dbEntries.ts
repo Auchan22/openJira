@@ -12,5 +12,5 @@ export const getEntryById = async (
   const entry = await Entry.findById(id).lean();
   await db.disconnect();
 
-  return entry;
+  return JSON.parse(JSON.stringify(entry));
 };

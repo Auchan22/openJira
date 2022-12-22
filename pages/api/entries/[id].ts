@@ -26,6 +26,9 @@ export default function handler(
     case 'GET':
       return getEntry(req, res);
 
+    case 'DELETE':
+      return deleteEntry(req, res);
+
     default:
       return res.status(400).json({ message: 'Invalid ID: ' + id });
   }
@@ -80,4 +83,31 @@ const getEntry = async (req: NextApiRequest, res: NextApiResponse) => {
   res.status(200).json(existEntry);
 
   await db.disconnect();
+};
+
+const deleteEntry = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { id } = req.query;
+
+  await db.connect();
+
+  const existEntry = await Entry.findById(id);
+
+  if (!existEntry) {
+    return res
+      .status(400)
+      .json({ message: 'No se encontro la entry con ese id' });
+  }
+
+  try {
+    const deletedEntry = await Entry.findOneAndDelete({ _id: id });
+
+    res.status(200).json(deletedEntry);
+    await db.disconnect();
+  } catch (error: any) {
+    console.error(error);
+    await db.disconnect();
+    res.status(400).json({ message: error.errors.status });
+
+    await db.disconnect();
+  }
 };
