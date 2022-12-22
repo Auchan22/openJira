@@ -22,12 +22,12 @@ import { Layout } from '../../components/layouts';
 import LabelImportantIcon from '@mui/icons-material/LabelImportant';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Entry, EntryStatus } from '../../interfaces';
-import mongoose from 'mongoose';
+import { dbEntries } from '../../database';
 
 const validStatus: EntryStatus[] = ['pending', 'in-progress', 'finished'];
 
 interface Props {
-  props: string;
+  entry: Entry;
 }
 
 const EntryPage: FC<Props> = (props) => {
@@ -118,7 +118,10 @@ const EntryPage: FC<Props> = (props) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { id } = params as { id: string };
-  if (!mongoose.isValidObjectId(id)) {
+
+  const entry = await dbEntries.getEntryById(id);
+
+  if (!entry) {
     return {
       redirect: {
         destination: '/',
@@ -129,7 +132,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   return {
     props: {
-      id,
+      entry,
     },
   };
 };
